@@ -9,7 +9,7 @@ from processor.nipl import *
 
 ####################################################################################################
 
-MAIN_URL        = 'http://www.navixtreme.com/playlist/index.plx'
+MAIN_URL        = 'http://www.navixtreme.com/playlist/playlist'
 TITLE           = L('Title')
 ART             = 'art-default.jpg'
 ICON            = 'icon-default.png'
