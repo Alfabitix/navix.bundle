@@ -4,6 +4,7 @@ import re
 
 from urllib import quote_plus
 from utils.utils import urlopen
+from time import sleep
 
 class NIPL:
 
@@ -56,6 +57,7 @@ class NIPL:
     #Set main NIPL function to call key -> function
     self.__functions__ = {
       'concat' : self.concat,
+      'countdown' : self.countdown,
       'debug' : self.debug,
       'print' : self._print,
       'escape' : self.escape,
@@ -66,7 +68,8 @@ class NIPL:
       'report' : self.report,
       'report_val' : self.report_val,
       'scrape' : self.scrape,
-      'unescape' : self.unescape
+      'unescape' : self.unescape,
+      'verbose' : self._verbose
     }
 
     #Set main NIPL operators to call key -> function
@@ -226,6 +229,13 @@ class NIPL:
       self.setValue(var=splitdata[0], value="".join([var1, var2]))
 
   ####################################################################################################
+  def countdown(self, line):
+    delay_time = int(self.getValue(line))
+    self._printv(2, 'Waiting ' + str(delay_time) + ' seconds')
+    sleep(delay_time)
+    self._printv(2, 'Wait finished')
+
+  ####################################################################################################
   def debug(self, line):
     if self.verbose > 0:
       var1 = self.getValue(line)
@@ -354,9 +364,7 @@ class NIPL:
     rawdata = urlopen(self.__app__, self.s_url, url_vars)
     if self.s_action == 'read':
       self.htmRaw = rawdata['content'].read()
-      rawdata['content'].close()
-
-      self._printv(1, 'Scrape htmRaw - ' + self.htmRaw)
+      rawdata['content'].close()      
       self._match(self.htmRaw)
 
     elif self.s_action == 'headers':
@@ -375,6 +383,11 @@ class NIPL:
     var2 = self.getValue(line)
     var2 = urllib.unquote_plus(var2)
     self.setValue(var=line, value=var2)
+
+  ####################################################################################################
+  def _verbose(self, line):
+    level = self.getValue(line)
+    self.verbose = level
 
   ####################################################################################################
   ### OPERATOR FUNCTIONS
